@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import Message, BotCommand
 from dotenv import load_dotenv
 from status import SignUp
-from functions import register_name, register_phone, register_address, register_position, register_finish, register_email, Idora, stop_process
+from functions import register_name, register_phone, register_address, register_position, register_finish, register_email, register_idora, stop_process
 from functions import start, helps, vacancy, start_menu, stop, info
 
 load_dotenv()
@@ -33,7 +33,7 @@ async def main(db) -> None:
     db.message.register(start_menu, Command(commands=["start"]))
     db.message.register(helps, Command(commands=["help"]))
 
-    db.message.register(Idora, SignUp.idora)
+    db.message.register(register_idora, SignUp.idora)
     db.message.register(register_name, SignUp.name)
     db.message.register(register_phone, SignUp.phone)
     db.message.register(register_address, SignUp.address)
