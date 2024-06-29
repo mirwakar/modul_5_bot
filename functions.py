@@ -25,73 +25,86 @@ async def info(message: Message, bot: Bot, state: FSMContext):
 
 
 async def helps(message: Message, bot: Bot, state: FSMContext):
-    await message.answer("""
-/start -> botni ishga tushurish🚀
-/help ->Comandalarni ko'rishℹ️
-/vaconcy -> E'lon berish📄
-    """)
-
-
-async def vacancy(message: Message, bot: Bot, state: FSMContext):
     await message.answer(
-        "Ismingizni kiriting:"
+        text="""
+/start -> botni ishga tushurish🚀
+/help -> Comandalarni ko'rishℹ️
+/vacancy -> E'lon berish📄
+/stop -> Jarayonni to'xtatish❌
+
+Agar savollaringiz bo'lsa, <a href="https://t.me/mirshakar03">@mirshakar03</a> bilan aloqaga chiqing.
+        """,
+        parse_mode="HTML"
     )
+
+
+async def vacancy(message: Message, state: FSMContext):
+    await message.answer("Idorani kiriting:")
+    await state.set_state(SignUp.idora)
+
+
+async def Idora(message: Message, state: FSMContext):
+    await state.update_data(idora=message.text)
+    await message.answer("Ismingizni kiriting:")
     await state.set_state(SignUp.name)
 
 
-# async def Idora(message: Message, state: FSMContext):
-#     await state.update_data(idora=message.text)
-#     await message.answer("Idora muvaffaqiyatli qo'shildi!")
-
-
-async def register_name(message: Message, bot: Bot, state: FSMContext):
+async def register_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
     await message.answer("Telefon raqamingizni kiriting: ")
     await state.set_state(SignUp.phone)
 
 
-async def register_phone(message: Message, bot: Bot, state: FSMContext):
+async def register_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.text)
     await message.answer("Manzilingizni kiriting: ")
     await state.set_state(SignUp.address)
 
 
-async def register_address(message: Message, bot: Bot, state: FSMContext):
+async def register_address(message: Message, state: FSMContext):
     await state.update_data(address=message.text)
     await message.answer("Lavozimingizni kiriting: ")
     await state.set_state(SignUp.position)
 
 
-async def register_position(message: Message, bot: Bot, state: FSMContext):
-    await state.update_data(position=message.text)
-    await message.answer("Ish haqini kiriting: ")
-    await state.set_state(SignUp.email)
-
-
-async def register_email(message: Message, bot:Bot, state: FSMContext):
+async def register_email(message: Message, state: FSMContext):
     await state.update_data(email=message.text)
     await message.answer("Emailingizni kiriting: ")
     await state.set_state(SignUp.salary)
 
 
+async def register_position(message: Message, state: FSMContext):
+    await state.update_data(position=message.text)
+    await message.answer("Ish haqini kiriting: ")
+    await state.set_state(SignUp.email)
+
+
 async def register_finish(message: Message, bot: Bot, state: FSMContext):
-    await state.update_data(finish=message.text)
+    await state.update_data(salary=message.text)
     data = await state.get_data()
     user = message.from_user
     txt = f'''
-           Ma'lumotlaringiz:
-           🇺🇿Telegram: @{user.username if user.username else "username mavjud emas"}
-           🧍‍♂️Ism: {data.get("name")}
-           ☎️Telefon: {data.get("phone")}
-           🌎Manzil: {data.get("address")}
-           📬Email: {data.get("email")}
-           👨‍💻: {data.get("position")}
-           🪙Maosh: {data.get("salary")}
+Ma'lumotlaringiz:
+🇺🇿Telegram: @{user.username if user.username else "username mavjud emas"}
+🏢Idora:{data.get("idora")}
+🧍‍♂️Ism: {data.get("name")}
+☎️Telefon: {data.get("phone")}
+🌎Manzil: {data.get("address")}
+🪙Maosh: {data.get("email")}
+👨‍💻Lavozim: {data.get("position")}
+📬Email: {data.get("salary")}
         '''
     await message.answer(text=txt)
     await message.answer(f"@{user.first_name} tez orada malumotingiz kanalga chiqadi")
+
+    await state.clear()
    # await message.answer("Tez orada malumotlaringiz kanalga chiqariladi:")
    # await bot.send_message(chat_id=6225636357, text=txt)
+
+
+async def stop_process(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer("Jarayon to'xtatildi.")
 
 
 async def start_menu(message: Message, bot: Message, state: FSMContext):
