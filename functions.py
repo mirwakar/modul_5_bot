@@ -43,7 +43,7 @@ async def vacancy(message: Message, state: FSMContext):
     await state.set_state(SignUp.idora)
 
 
-async def Idora(message: Message, state: FSMContext):
+async def register_idora(message: Message, state: FSMContext):
     await state.update_data(idora=message.text)
     await message.answer("Ismingizni kiriting:")
     await state.set_state(SignUp.name)
@@ -67,16 +67,16 @@ async def register_address(message: Message, state: FSMContext):
     await state.set_state(SignUp.position)
 
 
-async def register_email(message: Message, state: FSMContext):
-    await state.update_data(email=message.text)
-    await message.answer("Emailingizni kiriting: ")
-    await state.set_state(SignUp.salary)
-
-
 async def register_position(message: Message, state: FSMContext):
     await state.update_data(position=message.text)
-    await message.answer("Ish haqini kiriting: ")
+    await message.answer("Emailingizni kiriting: ")
     await state.set_state(SignUp.email)
+
+
+async def register_email(message: Message, state: FSMContext):
+    await state.update_data(email=message.text)
+    await message.answer("Ish haqini kiriting: ")
+    await state.set_state(SignUp.salary)
 
 
 async def register_finish(message: Message, bot: Bot, state: FSMContext):
@@ -90,9 +90,9 @@ Ma'lumotlaringiz:
 🧍‍♂️Ism: {data.get("name")}
 ☎️Telefon: {data.get("phone")}
 🌎Manzil: {data.get("address")}
-🪙Maosh: {data.get("email")}
+📬Email: {data.get("email")}
 👨‍💻Lavozim: {data.get("position")}
-📬Email: {data.get("salary")}
+🪙Maosh: {data.get("salary")}
         '''
     await message.answer(text=txt)
     await message.answer(f"@{user.first_name} tez orada malumotingiz kanalga chiqadi")
